@@ -23,6 +23,9 @@
 
     if (stackCount % 2 == 0) {
         self.view.backgroundColor = [UIColor colorWithRed:0.921f green:0.929f blue:1.000f alpha:1.000f];
+        self.view.tintColor = [UIColor redColor];
+    } else {
+        self.view.tintColor = [UIColor greenColor];
     }
 
     self.title = [@(stackCount) stringValue];

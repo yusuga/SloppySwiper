@@ -2,6 +2,8 @@ platform :ios, '7.0'
 
 target "SloppySwiperExample" do
   pod "SloppySwiper", :path => "../"
+  pod 'LTNavigationBar'
+  pod 'UIColor-CrossFade'
 end
 
 # Uncomment the following lines to add testing dependencies
