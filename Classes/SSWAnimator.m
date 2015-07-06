@@ -63,6 +63,8 @@ UIViewAnimationOptions const SSWNavigationTransitionCurve = 7 << 16;
     dimmingView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.1f];
     [toViewController.view addSubview:dimmingView];
 
+#define FixHidesBottomBarWhenPushedDisabled
+#ifndef FixHidesBottomBarWhenPushedDisabled
     // fix hidesBottomBarWhenPushed not animated properly
     UITabBarController *tabBarController = toViewController.tabBarController;
     UINavigationController *navController = toViewController.navigationController;
@@ -82,6 +84,7 @@ UIViewAnimationOptions const SSWNavigationTransitionCurve = 7 << 16;
         [toViewController.view addSubview:tabBar];
         shouldAddTabBarBackToTabBarController = YES;
     }
+#endif
 
     // Uses linear curve for an interactive transition, so the view follows the finger. Otherwise, uses a navigation transition curve.
     UIViewAnimationOptions curveOption = [transitionContext isInteractive] ? UIViewAnimationOptionCurveLinear : SSWNavigationTransitionCurve;
@@ -92,6 +95,7 @@ UIViewAnimationOptions const SSWNavigationTransitionCurve = 7 << 16;
         dimmingView.alpha = 0.0f;
 
     } completion:^(BOOL finished) {
+#ifndef FixHidesBottomBarWhenPushedDisabled
         if (shouldAddTabBarBackToTabBarController) {
             [tabBarController.view addSubview:tabBar];
             
@@ -99,6 +103,7 @@ UIViewAnimationOptions const SSWNavigationTransitionCurve = 7 << 16;
             tabBarRect.origin.x = tabBarController.view.bounds.origin.x;
             tabBar.frame = tabBarRect;
         }
+#endif
 
         [dimmingView removeFromSuperview];
         fromViewController.view.transform = CGAffineTransformIdentity;
