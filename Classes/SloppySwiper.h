@@ -18,6 +18,4 @@
 /// Designated initializer if the class isn't used from the Interface Builder.
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController;
 
-@property (nonatomic) BOOL navigationBarColorChangingDisabled;
-
 @end

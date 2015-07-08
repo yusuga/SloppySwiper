@@ -7,6 +7,7 @@
 #import "SloppySwiper.h"
 #import "SSWAnimator.h"
 #import "SSWDirectionalPanGestureRecognizer.h"
+#import "SloppySwiperViewControllerProtocol.h"
 #import <LTNavigationBar/UINavigationBar+Awesome.h>
 #import <UIColor-CrossFade/UIColor+CrossFade.h>
 
@@ -78,7 +79,7 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
-            [self updateBarColorWithRatio:self.interactionController.percentComplete];
+            [self updateBarColorsWithRatio:self.interactionController.percentComplete];
             
             CGPoint translation = [recognizer translationInView:view];
             // Cumulative translation.x can be less than zero because user can pan slightly to the right and then back to the left.
@@ -90,10 +91,10 @@
         case UIGestureRecognizerStateFailed:
                 case UIGestureRecognizerStateEnded:
             if (recognizer.state == UIGestureRecognizerStateEnded && [recognizer velocityInView:view].x > 0) {
-                [self updateBarColorWithRatio:1.];
+                [self updateBarColorsWithRatio:1.];
                 [self.interactionController finishInteractiveTransition];
             } else {
-                [self updateBarColorWithRatio:0.];
+                [self updateBarColorsWithRatio:0.];
                 [self.interactionController cancelInteractiveTransition];
                 // When the transition is cancelled, `navigationController:didShowViewController:animated:` isn't called, so we have to maintain `duringAnimation`'s state here too.
                 self.duringAnimation = NO;
@@ -198,12 +199,18 @@
     
     if (self.fromViewController && self.toViewController) {
         if (self.interactionController) {
-            [self updateBarColorWithRatio:viewController == self.toViewController ? 0. : 1.];
+            [self updateBarColorsWithRatio:viewController == self.toViewController ? 0. : 1.];
         } else {
-            [self updateBarColorWithRatio:1.];
+            [self updateBarColorsWithRatio:1.];
         }
     } else {
-        [self updateBarColor:viewController.view.tintColor];
+        // Displayed for the first time.
+        if ([viewController respondsToSelector:@selector(ssw_barColor)]) {
+            [self setBarColor:[viewController performSelector:@selector(ssw_barColor)]];
+        }
+        if ([viewController respondsToSelector:@selector(ssw_barItemColor)]) {
+            [self setBarItemColor:[viewController performSelector:@selector(ssw_barItemColor)]];
+        }
     }
 }
 
@@ -218,28 +225,56 @@
         self.panRecognizer.enabled = YES;
     }
     
-    [self updateBarColorWithRatio:viewController == self.toViewController ? 1. : 0.];
+    [self updateBarColorsWithRatio:viewController == self.toViewController ? 1. : 0.];
 }
 
 #pragma mark - UINavigationBar
 
-- (void)updateBarColorWithRatio:(CGFloat)ratio
+- (void)updateBarColorsWithRatio:(CGFloat)ratio
 {
-    UIColor *fromBarColor = self.fromViewController.view.tintColor;
-    UIColor *toBarColor = self.toViewController.view.tintColor;
+    UIColor *fromBarColor;
+    if ([self.fromViewController respondsToSelector:@selector(ssw_barColor)]) {
+        fromBarColor = [self.fromViewController performSelector:@selector(ssw_barColor)];
+    }
+    UIColor *fromBarItemColor;
+    if ([self.fromViewController respondsToSelector:@selector(ssw_barItemColor)]) {
+        fromBarItemColor = [self.fromViewController performSelector:@selector(ssw_barItemColor)];
+    }
+    UIColor *toBarColor;
+    if ([self.toViewController respondsToSelector:@selector(ssw_barColor)]) {
+        toBarColor = [self.toViewController performSelector:@selector(ssw_barColor)];
+    }
+    UIColor *toBarItemColor;
+    if ([self.toViewController respondsToSelector:@selector(ssw_barItemColor)]) {
+        toBarItemColor = [self.toViewController performSelector:@selector(ssw_barItemColor)];
+    }
     
     if (fromBarColor && toBarColor) {
-        [self updateBarColor:[UIColor colorForFadeBetweenFirstColor:fromBarColor
-                                                        secondColor:toBarColor
-                                                            atRatio:ratio]];
+        [self setBarColor:[UIColor colorForFadeBetweenFirstColor:fromBarColor
+                                                     secondColor:toBarColor
+                                                         atRatio:ratio]];
+    }
+    if (fromBarItemColor && toBarItemColor) {
+        [self setBarItemColor:[UIColor colorForFadeBetweenFirstColor:fromBarItemColor
+                                                         secondColor:toBarItemColor
+                                                             atRatio:ratio]];
+        
     }
 }
 
-- (void)updateBarColor:(UIColor *)barColor
+- (void)setBarColor:(UIColor *)color
 {
-    if (!self.navigationBarColorChangingDisabled) {
-        [self.navigationController.navigationBar lt_setBackgroundColor:barColor];
-    }
+    [self.navigationController.navigationBar lt_setBackgroundColor:color];
+}
+
+- (void)setBarItemColor:(UIColor *)color
+{
+    UINavigationBar *bar = self.navigationController.navigationBar;
+    bar.tintColor = color;
+    
+    NSMutableDictionary *attr = [NSMutableDictionary dictionaryWithDictionary:bar.titleTextAttributes];
+    [attr setObject:color forKey:NSForegroundColorAttributeName];
+    bar.titleTextAttributes = [attr copy];
 }
 
 @end
