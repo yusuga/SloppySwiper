@@ -10,7 +10,7 @@
 
 @protocol SloppySwiperViewControllerProtocol <NSObject>
 
-- (UIColor *)ssw_barColor;
-- (UIColor *)ssw_barItemColor;
+- (UIColor *)ssw_navigationBarColor;
+- (UIColor *)ssw_navigationBarItemColor;
 
 @end

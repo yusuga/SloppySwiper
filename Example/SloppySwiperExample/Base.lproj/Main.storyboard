@@ -28,6 +28,17 @@
                                     <segue destination="vXZ-lx-hvc" kind="push" id="cdb-sK-cRk"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vA3-a2-Nbc">
+                                <rect key="frame" x="68" y="313" width="185" height="31"/>
+                                <segments>
+                                    <segment title="Red"/>
+                                    <segment title="Green"/>
+                                    <segment title="Blue"/>
+                                </segments>
+                                <connections>
+                                    <action selector="colorControlDidChange:" destination="vXZ-lx-hvc" eventType="valueChanged" id="N2D-8W-Ftr"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -35,7 +46,9 @@
                             <constraint firstAttribute="centerX" secondItem="7I7-bD-Sf9" secondAttribute="centerX" constant="-0.5" id="UPQ-fo-LuN"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="GWq-HT-TWG"/>
+                    <navigationItem key="navigationItem" id="GWq-HT-TWG">
+                        <nil key="title"/>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

@@ -11,6 +11,8 @@
 #import <LTNavigationBar/UINavigationBar+Awesome.h>
 #import <UIColor-CrossFade/UIColor+CrossFade.h>
 
+static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"SloppySwiperUpdateNavigationBarColorNotification";
+
 @interface SloppySwiper() <UIGestureRecognizerDelegate>
 @property (weak, readwrite, nonatomic) UIPanGestureRecognizer *panRecognizer;
 @property (weak, nonatomic) IBOutlet UINavigationController *navigationController;
@@ -31,6 +33,7 @@
 {
     [_panRecognizer removeTarget:self action:@selector(pan:)];
     [_navigationController.view removeGestureRecognizer:_panRecognizer];
+    [self unregisterForNotifications];
 }
 
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
@@ -60,7 +63,9 @@
     [_navigationController.view addGestureRecognizer:panRecognizer];
     _panRecognizer = panRecognizer;
 
-    _animator = [[SSWAnimator alloc] init];    
+    _animator = [[SSWAnimator alloc] init];
+    
+    [self registerForNotifications];
 }
 
 #pragma mark - UIPanGestureRecognizer
@@ -79,7 +84,7 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
-            [self updateBarColorsWithRatio:self.interactionController.percentComplete];
+            [self updateNavigationBarColorsWithRatio:self.interactionController.percentComplete];
             
             CGPoint translation = [recognizer translationInView:view];
             // Cumulative translation.x can be less than zero because user can pan slightly to the right and then back to the left.
@@ -91,10 +96,10 @@
         case UIGestureRecognizerStateFailed:
                 case UIGestureRecognizerStateEnded:
             if (recognizer.state == UIGestureRecognizerStateEnded && [recognizer velocityInView:view].x > 0) {
-                [self updateBarColorsWithRatio:1.];
+                [self updateNavigationBarColorsWithRatio:1.];
                 [self.interactionController finishInteractiveTransition];
             } else {
-                [self updateBarColorsWithRatio:0.];
+                [self updateNavigationBarColorsWithRatio:0.];
                 [self.interactionController cancelInteractiveTransition];
                 // When the transition is cancelled, `navigationController:didShowViewController:animated:` isn't called, so we have to maintain `duringAnimation`'s state here too.
                 self.duringAnimation = NO;
@@ -199,18 +204,13 @@
     
     if (self.fromViewController && self.toViewController) {
         if (self.interactionController) {
-            [self updateBarColorsWithRatio:viewController == self.toViewController ? 0. : 1.];
+            [self updateNavigationBarColorsWithRatio:viewController == self.toViewController ? 0. : 1.];
         } else {
-            [self updateBarColorsWithRatio:1.];
+            [self updateNavigationBarColorsWithRatio:1.];
         }
     } else {
         // Displayed for the first time.
-        if ([viewController respondsToSelector:@selector(ssw_barColor)]) {
-            [self setBarColor:[viewController performSelector:@selector(ssw_barColor)]];
-        }
-        if ([viewController respondsToSelector:@selector(ssw_barItemColor)]) {
-            [self setBarItemColor:[viewController performSelector:@selector(ssw_barItemColor)]];
-        }
+        [self updateNavigationBarColorsWithViewController:viewController];
     }
 }
 
@@ -225,56 +225,95 @@
         self.panRecognizer.enabled = YES;
     }
     
-    [self updateBarColorsWithRatio:viewController == self.toViewController ? 1. : 0.];
+    [self updateNavigationBarColorsWithRatio:viewController == self.toViewController ? 1. : 0.];
 }
 
 #pragma mark - UINavigationBar
 
-- (void)updateBarColorsWithRatio:(CGFloat)ratio
+- (void)updateNavigationBarColorsWithRatio:(CGFloat)ratio
 {
     UIColor *fromBarColor;
-    if ([self.fromViewController respondsToSelector:@selector(ssw_barColor)]) {
-        fromBarColor = [self.fromViewController performSelector:@selector(ssw_barColor)];
+    if ([self.fromViewController respondsToSelector:@selector(ssw_navigationBarColor)]) {
+        fromBarColor = [self.fromViewController performSelector:@selector(ssw_navigationBarColor)];
     }
     UIColor *fromBarItemColor;
-    if ([self.fromViewController respondsToSelector:@selector(ssw_barItemColor)]) {
-        fromBarItemColor = [self.fromViewController performSelector:@selector(ssw_barItemColor)];
+    if ([self.fromViewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
+        fromBarItemColor = [self.fromViewController performSelector:@selector(ssw_navigationBarItemColor)];
     }
     UIColor *toBarColor;
-    if ([self.toViewController respondsToSelector:@selector(ssw_barColor)]) {
-        toBarColor = [self.toViewController performSelector:@selector(ssw_barColor)];
+    if ([self.toViewController respondsToSelector:@selector(ssw_navigationBarColor)]) {
+        toBarColor = [self.toViewController performSelector:@selector(ssw_navigationBarColor)];
     }
     UIColor *toBarItemColor;
-    if ([self.toViewController respondsToSelector:@selector(ssw_barItemColor)]) {
-        toBarItemColor = [self.toViewController performSelector:@selector(ssw_barItemColor)];
+    if ([self.toViewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
+        toBarItemColor = [self.toViewController performSelector:@selector(ssw_navigationBarItemColor)];
     }
     
     if (fromBarColor && toBarColor) {
-        [self setBarColor:[UIColor colorForFadeBetweenFirstColor:fromBarColor
+        [self setNavigationBarColor:[UIColor colorForFadeBetweenFirstColor:fromBarColor
                                                      secondColor:toBarColor
                                                          atRatio:ratio]];
     }
     if (fromBarItemColor && toBarItemColor) {
-        [self setBarItemColor:[UIColor colorForFadeBetweenFirstColor:fromBarItemColor
+        [self setNavigationBarItemColor:[UIColor colorForFadeBetweenFirstColor:fromBarItemColor
                                                          secondColor:toBarItemColor
                                                              atRatio:ratio]];
         
     }
 }
 
-- (void)setBarColor:(UIColor *)color
+- (void)updateNavigationBarColorsWithViewController:(UIViewController *)viewController
 {
-    [self.navigationController.navigationBar lt_setBackgroundColor:color];
+    if ([viewController respondsToSelector:@selector(ssw_navigationBarColor)]) {
+        [self setNavigationBarColor:[viewController performSelector:@selector(ssw_navigationBarColor)]];
+    }
+    if ([viewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
+        [self setNavigationBarItemColor:[viewController performSelector:@selector(ssw_navigationBarItemColor)]];
+    }
 }
 
-- (void)setBarItemColor:(UIColor *)color
+- (void)setNavigationBarColor:(UIColor *)color
+{
+    [self.navigationController.navigationBar lt_setBackgroundColor:color];    
+}
+
+- (void)setNavigationBarItemColor:(UIColor *)color
 {
     UINavigationBar *bar = self.navigationController.navigationBar;
     bar.tintColor = color;
     
     NSMutableDictionary *attr = [NSMutableDictionary dictionaryWithDictionary:bar.titleTextAttributes];
     [attr setObject:color forKey:NSForegroundColorAttributeName];
-    bar.titleTextAttributes = [attr copy];
+    bar.titleTextAttributes = [attr copy];    
+}
+
+#pragma mark - Notification
+
+- (void)registerForNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateNavigationBarColors)
+                                                 name:SloppySwiperUpdateNavigationBarColorNotification
+                                               object:nil];
+}
+
+- (void)unregisterForNotifications
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SloppySwiperUpdateNavigationBarColorNotification
+                                                  object:nil];
+}
+
++ (void)updateNavigationBarColors
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:SloppySwiperUpdateNavigationBarColorNotification
+                                                        object:nil
+                                                      userInfo:nil];
+}
+
+- (void)updateNavigationBarColors
+{
+    [self updateNavigationBarColorsWithViewController:self.navigationController.topViewController];
 }
 
 @end
