@@ -12,6 +12,7 @@
 
 @interface ViewController () <SloppySwiperViewControllerProtocol>
 
+@property (nonatomic) UIBarStyle ssw_navigationBarStyle;
 @property (nonatomic) UIColor *ssw_navigationBarColor;
 @property (nonatomic) UIColor *ssw_navigationBarItemColor;
 
@@ -66,7 +67,14 @@
     
     self.ssw_navigationBarColor = barColor;
     self.ssw_navigationBarItemColor = barItemColor;
-    [SloppySwiper updateNavigationBarColors];
+    [SloppySwiper updateNavigationBarAppearance];
+}
+
+- (IBAction)styleControlDidChange:(UISegmentedControl *)sender
+{
+    NSParameterAssert(sender.selectedSegmentIndex == UIBarStyleDefault || sender.selectedSegmentIndex == UIBarStyleBlack);
+    self.ssw_navigationBarStyle = sender.selectedSegmentIndex;
+    [SloppySwiper updateNavigationBarAppearance];
 }
 
 @end

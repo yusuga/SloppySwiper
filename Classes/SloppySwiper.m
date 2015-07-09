@@ -11,7 +11,7 @@
 #import <LTNavigationBar/UINavigationBar+Awesome.h>
 #import <UIColor-CrossFade/UIColor+CrossFade.h>
 
-static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"SloppySwiperUpdateNavigationBarColorNotification";
+static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = @"SloppySwiperUpdateNavigationBarAppearanceNotification";
 
 @interface SloppySwiper() <UIGestureRecognizerDelegate>
 @property (weak, readwrite, nonatomic) UIPanGestureRecognizer *panRecognizer;
@@ -84,7 +84,7 @@ static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"Slo
             break;
         case UIGestureRecognizerStateChanged:
         {
-            [self updateNavigationBarColorsWithRatio:self.interactionController.percentComplete];
+            [self updateNavigationBarAppearanceWithRatio:self.interactionController.percentComplete];
             
             CGPoint translation = [recognizer translationInView:view];
             // Cumulative translation.x can be less than zero because user can pan slightly to the right and then back to the left.
@@ -96,10 +96,10 @@ static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"Slo
         case UIGestureRecognizerStateFailed:
                 case UIGestureRecognizerStateEnded:
             if (recognizer.state == UIGestureRecognizerStateEnded && [recognizer velocityInView:view].x > 0) {
-                [self updateNavigationBarColorsWithRatio:1.];
+                [self updateNavigationBarAppearanceWithRatio:1.];
                 [self.interactionController finishInteractiveTransition];
             } else {
-                [self updateNavigationBarColorsWithRatio:0.];
+                [self updateNavigationBarAppearanceWithRatio:0.];
                 [self.interactionController cancelInteractiveTransition];
                 // When the transition is cancelled, `navigationController:didShowViewController:animated:` isn't called, so we have to maintain `duringAnimation`'s state here too.
                 self.duringAnimation = NO;
@@ -204,13 +204,13 @@ static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"Slo
     
     if (self.fromViewController && self.toViewController) {
         if (self.interactionController) {
-            [self updateNavigationBarColorsWithRatio:viewController == self.toViewController ? 0. : 1.];
+            [self updateNavigationBarAppearanceWithRatio:viewController == self.toViewController ? 0. : 1.];
         } else {
-            [self updateNavigationBarColorsWithRatio:1.];
+            [self updateNavigationBarAppearanceWithRatio:1.];
         }
     } else {
         // Displayed for the first time.
-        [self updateNavigationBarColorsWithViewController:viewController];
+        [self updateNavigationBarAppearanceWithViewController:viewController];
     }
 }
 
@@ -225,29 +225,20 @@ static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"Slo
         self.panRecognizer.enabled = YES;
     }
     
-    [self updateNavigationBarColorsWithRatio:viewController == self.toViewController ? 1. : 0.];
+    [self updateNavigationBarAppearanceWithRatio:viewController == self.toViewController ? 1. : 0.];
 }
 
 #pragma mark - UINavigationBar
 
-- (void)updateNavigationBarColorsWithRatio:(CGFloat)ratio
+- (void)updateNavigationBarAppearanceWithRatio:(CGFloat)ratio
 {
-    UIColor *fromBarColor;
-    if ([self.fromViewController respondsToSelector:@selector(ssw_navigationBarColor)]) {
-        fromBarColor = [self.fromViewController performSelector:@selector(ssw_navigationBarColor)];
-    }
-    UIColor *fromBarItemColor;
-    if ([self.fromViewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
-        fromBarItemColor = [self.fromViewController performSelector:@selector(ssw_navigationBarItemColor)];
-    }
-    UIColor *toBarColor;
-    if ([self.toViewController respondsToSelector:@selector(ssw_navigationBarColor)]) {
-        toBarColor = [self.toViewController performSelector:@selector(ssw_navigationBarColor)];
-    }
-    UIColor *toBarItemColor;
-    if ([self.toViewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
-        toBarItemColor = [self.toViewController performSelector:@selector(ssw_navigationBarItemColor)];
-    }
+    UIBarStyle barStyle = ratio < 0.5 ? [self navigationBarStyleFromViewController:self.fromViewController] : [self navigationBarStyleFromViewController:self.toViewController];
+    [self setNavigationBarStyle:barStyle];
+    
+    UIColor *fromBarColor = [self navigationBarColorFromViewController:self.fromViewController];
+    UIColor *fromBarItemColor = [self navigationBarItemColorFromViewController:self.fromViewController];
+    UIColor *toBarColor = [self navigationBarColorFromViewController:self.toViewController];
+    UIColor *toBarItemColor = [self navigationBarItemColorFromViewController:self.toViewController];
     
     if (fromBarColor && toBarColor) {
         [self setNavigationBarColor:[UIColor colorForFadeBetweenFirstColor:fromBarColor
@@ -262,14 +253,23 @@ static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"Slo
     }
 }
 
-- (void)updateNavigationBarColorsWithViewController:(UIViewController *)viewController
+- (void)updateNavigationBarAppearanceWithViewController:(UIViewController *)viewController
 {
-    if ([viewController respondsToSelector:@selector(ssw_navigationBarColor)]) {
-        [self setNavigationBarColor:[viewController performSelector:@selector(ssw_navigationBarColor)]];
+    [self setNavigationBarStyle:[self navigationBarStyleFromViewController:viewController]];
+    
+    UIColor *barColor = [self navigationBarColorFromViewController:viewController];
+    if (barColor) {
+        [self setNavigationBarColor:barColor];
     }
-    if ([viewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
-        [self setNavigationBarItemColor:[viewController performSelector:@selector(ssw_navigationBarItemColor)]];
+    UIColor *barItemColor = [self navigationBarItemColorFromViewController:viewController];
+    if (barItemColor) {
+        [self setNavigationBarItemColor:barItemColor];
     }
+}
+
+- (void)setNavigationBarStyle:(UIBarStyle)barStyle
+{
+    self.navigationController.navigationBar.barStyle = barStyle;
 }
 
 - (void)setNavigationBarColor:(UIColor *)color
@@ -287,33 +287,59 @@ static NSString * const SloppySwiperUpdateNavigationBarColorNotification = @"Slo
     bar.titleTextAttributes = [attr copy];    
 }
 
+#pragma mark - UINavigationBar - Private
+
+- (UIBarStyle)navigationBarStyleFromViewController:(UIViewController *)viewCotnroller
+{
+    if ([viewCotnroller respondsToSelector:@selector(ssw_navigationBarStyle)]) {
+        return [(id<SloppySwiperViewControllerProtocol>)viewCotnroller ssw_navigationBarStyle];
+    }
+    return UIBarStyleDefault;
+}
+
+- (UIColor *)navigationBarColorFromViewController:(UIViewController *)viewController
+{
+    if ([viewController respondsToSelector:@selector(ssw_navigationBarColor)]) {
+        return [viewController performSelector:@selector(ssw_navigationBarColor)];
+    }
+    return nil;
+}
+
+- (UIColor *)navigationBarItemColorFromViewController:(UIViewController *)viewController
+{
+    if ([viewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
+        return [viewController performSelector:@selector(ssw_navigationBarItemColor)];
+    }
+    return nil;
+}
+
 #pragma mark - Notification
 
 - (void)registerForNotifications
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateNavigationBarColors)
-                                                 name:SloppySwiperUpdateNavigationBarColorNotification
+                                             selector:@selector(updateNavigationBarAppearance)
+                                                 name:SloppySwiperUpdateNavigationBarAppearanceNotification
                                                object:nil];
 }
 
 - (void)unregisterForNotifications
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SloppySwiperUpdateNavigationBarColorNotification
+                                                    name:SloppySwiperUpdateNavigationBarAppearanceNotification
                                                   object:nil];
 }
 
-+ (void)updateNavigationBarColors
++ (void)updateNavigationBarAppearance
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:SloppySwiperUpdateNavigationBarColorNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:SloppySwiperUpdateNavigationBarAppearanceNotification
                                                         object:nil
                                                       userInfo:nil];
 }
 
-- (void)updateNavigationBarColors
+- (void)updateNavigationBarAppearance
 {
-    [self updateNavigationBarColorsWithViewController:self.navigationController.topViewController];
+    [self updateNavigationBarAppearanceWithViewController:self.navigationController.topViewController];
 }
 
 @end

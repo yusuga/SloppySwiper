@@ -29,7 +29,7 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vA3-a2-Nbc">
-                                <rect key="frame" x="68" y="313" width="185" height="31"/>
+                                <rect key="frame" x="68" y="313" width="185" height="29"/>
                                 <segments>
                                     <segment title="Red"/>
                                     <segment title="Green"/>
@@ -37,6 +37,16 @@
                                 </segments>
                                 <connections>
                                     <action selector="colorControlDidChange:" destination="vXZ-lx-hvc" eventType="valueChanged" id="N2D-8W-Ftr"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a83-bF-y1j">
+                                <rect key="frame" x="99" y="351" width="115" height="29"/>
+                                <segments>
+                                    <segment title="Default"/>
+                                    <segment title="Black"/>
+                                </segments>
+                                <connections>
+                                    <action selector="styleControlDidChange:" destination="vXZ-lx-hvc" eventType="valueChanged" id="VrE-Hr-Sqj"/>
                                 </connections>
                             </segmentedControl>
                         </subviews>
