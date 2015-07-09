@@ -225,7 +225,9 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
         self.panRecognizer.enabled = YES;
     }
     
-    [self updateNavigationBarAppearanceWithRatio:viewController == self.toViewController ? 1. : 0.];
+    if (self.toViewController) {
+        [self updateNavigationBarAppearanceWithRatio:viewController == self.toViewController ? 1. : 0.];
+    }
 }
 
 #pragma mark - UINavigationBar
@@ -256,15 +258,8 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
 - (void)updateNavigationBarAppearanceWithViewController:(UIViewController *)viewController
 {
     [self setNavigationBarStyle:[self navigationBarStyleFromViewController:viewController]];
-    
-    UIColor *barColor = [self navigationBarColorFromViewController:viewController];
-    if (barColor) {
-        [self setNavigationBarColor:barColor];
-    }
-    UIColor *barItemColor = [self navigationBarItemColorFromViewController:viewController];
-    if (barItemColor) {
-        [self setNavigationBarItemColor:barItemColor];
-    }
+    [self setNavigationBarColor:[self navigationBarColorFromViewController:viewController]];
+    [self setNavigationBarItemColor:[self navigationBarItemColorFromViewController:viewController]];
 }
 
 - (void)setNavigationBarStyle:(UIBarStyle)barStyle
@@ -274,7 +269,20 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
 
 - (void)setNavigationBarColor:(UIColor *)color
 {
-    [self.navigationController.navigationBar lt_setBackgroundColor:color];    
+    UINavigationBar *bar = self.navigationController.navigationBar;
+    if (color) {
+        CGFloat alpha = 0.;
+        if (![color getRed:NULL green:NULL blue:NULL alpha:&alpha]) {
+            [color getWhite:NULL alpha:&alpha];
+        }
+        if (alpha > 0.) {
+            [bar lt_setBackgroundColor:color];
+        } else {
+            [bar lt_reset];
+        }
+    } else {
+        [bar lt_reset];
+    }
 }
 
 - (void)setNavigationBarItemColor:(UIColor *)color
@@ -283,8 +291,12 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
     bar.tintColor = color;
     
     NSMutableDictionary *attr = [NSMutableDictionary dictionaryWithDictionary:bar.titleTextAttributes];
-    [attr setObject:color forKey:NSForegroundColorAttributeName];
-    bar.titleTextAttributes = [attr copy];    
+    if (color) {
+        [attr setObject:color forKey:NSForegroundColorAttributeName];
+    } else {
+        [attr removeObjectForKey:NSForegroundColorAttributeName];
+    }
+    bar.titleTextAttributes = attr.count ? [attr copy] : nil;
 }
 
 #pragma mark - UINavigationBar - Private
