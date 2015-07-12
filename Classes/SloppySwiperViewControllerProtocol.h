@@ -13,5 +13,6 @@
 - (UIBarStyle)ssw_navigationBarStyle;
 - (UIColor *)ssw_navigationBarColor;
 - (UIColor *)ssw_navigationBarItemColor;
+- (UIImage *)ssw_navigationBarShadowImage;
 
 @end

@@ -253,6 +253,10 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
                                                              atRatio:ratio]];
         
     }
+    
+    if (ratio == 0. || ratio == 1.) {
+        [self setNavigationBarShadowImage:[self navigationBarShadowImageFromViewController:ratio == 0. ? self.fromViewController : self.toViewController]];
+    }
 }
 
 - (void)updateNavigationBarAppearanceWithViewController:(UIViewController *)viewController
@@ -291,6 +295,11 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
     bar.titleTextAttributes = attr.count ? [attr copy] : nil;
 }
 
+- (void)setNavigationBarShadowImage:(UIImage *)image;
+{
+    self.navigationController.navigationBar.shadowImage = image;
+}
+
 #pragma mark - UINavigationBar - Private
 
 - (UIBarStyle)navigationBarStyleFromViewController:(UIViewController *)viewCotnroller
@@ -313,6 +322,14 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
 {
     if ([viewController respondsToSelector:@selector(ssw_navigationBarItemColor)]) {
         return [viewController performSelector:@selector(ssw_navigationBarItemColor)];
+    }
+    return nil;
+}
+
+- (UIImage *)navigationBarShadowImageFromViewController:(UIViewController *)viewController
+{
+    if ([viewController respondsToSelector:@selector(ssw_navigationBarShadowImage)]) {
+        return [viewController performSelector:@selector(ssw_navigationBarShadowImage)];
     }
     return nil;
 }
