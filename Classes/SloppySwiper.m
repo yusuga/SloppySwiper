@@ -271,15 +271,7 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
 {
     UINavigationBar *bar = self.navigationController.navigationBar;
     if (color) {
-        CGFloat alpha = 0.;
-        if (![color getRed:NULL green:NULL blue:NULL alpha:&alpha]) {
-            [color getWhite:NULL alpha:&alpha];
-        }
-        if (alpha > 0.) {
-            [bar lt_setBackgroundColor:color];
-        } else {
-            [bar lt_reset];
-        }
+        [bar lt_setBackgroundColor:color];
     } else {
         [bar lt_reset];
     }
