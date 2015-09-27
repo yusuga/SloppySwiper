@@ -7,6 +7,22 @@
 #import "SSWDirectionalPanGestureRecognizer.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
+NSString *NSStringFromSSWPanDirection(SSWPanDirection direction)
+{
+    switch (direction) {
+        case SSWPanDirectionRight:
+            return @"SSWPanDirectionRight";
+        case SSWPanDirectionDown:
+            return @"SSWPanDirectionDown";
+        case SSWPanDirectionLeft:
+            return @"SSWPanDirectionLeft";
+        case SSWPanDirectionUp:
+            return @"SSWPanDirectionUp";
+        default:
+            return [NSString stringWithFormat:@"Unknown SSWPanDirection(%zd)", direction];
+    }
+}
+
 @interface SSWDirectionalPanGestureRecognizer()
 @property (nonatomic) BOOL dragging;
 @end

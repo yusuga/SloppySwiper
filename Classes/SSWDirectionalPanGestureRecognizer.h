@@ -12,6 +12,7 @@ typedef NS_ENUM(NSInteger, SSWPanDirection) {
     SSWPanDirectionLeft,
     SSWPanDirectionUp
 };
+extern NSString *NSStringFromSSWPanDirection(SSWPanDirection direction);
 
 /**
  *  `SSWDirectionalPanGestureRecognizer` is a subclass of `UIPanGestureRecognizer`. It adds `direction` property and checks if the pan gesture started in the correct direction; it fails otherwise.
