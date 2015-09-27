@@ -22,6 +22,7 @@
 		A6C429711937ABD10095C38C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6C429531937ABD10095C38C /* UIKit.framework */; };
 		A6C429791937ABD10095C38C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6C429771937ABD10095C38C /* InfoPlist.strings */; };
 		A6C4297B1937ABD10095C38C /* SloppySwiperExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C4297A1937ABD10095C38C /* SloppySwiperExampleTests.m */; };
+		B83D47F71BB6F41B0016E851 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B83D47F61BB6F41B0016E851 /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		A6C429761937ABD10095C38C /* SloppySwiperExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SloppySwiperExampleTests-Info.plist"; sourceTree = "<group>"; };
 		A6C429781937ABD10095C38C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A6C4297A1937ABD10095C38C /* SloppySwiperExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SloppySwiperExampleTests.m; sourceTree = "<group>"; };
+		B83D47F61BB6F41B0016E851 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DDA1F5A35ADFF4D6681FD7C2 /* libPods-SloppySwiperExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SloppySwiperExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -134,6 +136,7 @@
 				A6C429641937ABD10095C38C /* ViewController.h */,
 				A6C429651937ABD10095C38C /* ViewController.m */,
 				A6C429671937ABD10095C38C /* Images.xcassets */,
+				B83D47F61BB6F41B0016E851 /* LaunchScreen.storyboard */,
 				A6C429561937ABD10095C38C /* Supporting Files */,
 			);
 			path = SloppySwiperExample;
@@ -214,7 +217,7 @@
 		A6C429441937ABD10095C38C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Arkadiusz Holko";
 				TargetAttributes = {
 					A6C4296C1937ABD10095C38C = {
@@ -247,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6C429681937ABD10095C38C /* Images.xcassets in Resources */,
+				B83D47F71BB6F41B0016E851 /* LaunchScreen.storyboard in Resources */,
 				A6C4295A1937ABD10095C38C /* InfoPlist.strings in Resources */,
 				A6C429631937ABD10095C38C /* Main.storyboard in Resources */,
 			);
@@ -373,6 +377,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -393,7 +398,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-Wextra",
@@ -439,7 +444,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = (
 					"-Wextra",
 					"-Wno-unused-parameter",
@@ -459,6 +464,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SloppySwiperExample/SloppySwiperExample-Prefix.pch";
 				INFOPLIST_FILE = "SloppySwiperExample/SloppySwiperExample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "pl.holko.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -473,6 +480,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SloppySwiperExample/SloppySwiperExample-Prefix.pch";
 				INFOPLIST_FILE = "SloppySwiperExample/SloppySwiperExample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "pl.holko.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -483,7 +492,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SloppySwiperExample.app/SloppySwiperExample";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
@@ -494,6 +502,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "SloppySwiperExampleTests/SloppySwiperExampleTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "pl.holko.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -505,13 +514,13 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SloppySwiperExample.app/SloppySwiperExample";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SloppySwiperExample/SloppySwiperExample-Prefix.pch";
 				INFOPLIST_FILE = "SloppySwiperExampleTests/SloppySwiperExampleTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "pl.holko.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;

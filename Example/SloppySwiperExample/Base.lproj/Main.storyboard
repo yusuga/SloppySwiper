@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="bIS-C8-vjl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="bIS-C8-vjl">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -28,8 +28,18 @@
                                     <segue destination="vXZ-lx-hvc" kind="push" id="cdb-sK-cRk"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vA3-a2-Nbc">
-                                <rect key="frame" x="68" y="313" width="185" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a83-bF-y1j">
+                                <rect key="frame" x="102" y="349" width="117" height="29"/>
+                                <segments>
+                                    <segment title="Default"/>
+                                    <segment title="Black"/>
+                                </segments>
+                                <connections>
+                                    <action selector="styleControlDidChange:" destination="vXZ-lx-hvc" eventType="valueChanged" id="VrE-Hr-Sqj"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vA3-a2-Nbc">
+                                <rect key="frame" x="83" y="313" width="155" height="29"/>
                                 <segments>
                                     <segment title="Red"/>
                                     <segment title="Green"/>
@@ -39,21 +49,15 @@
                                     <action selector="colorControlDidChange:" destination="vXZ-lx-hvc" eventType="valueChanged" id="N2D-8W-Ftr"/>
                                 </connections>
                             </segmentedControl>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a83-bF-y1j">
-                                <rect key="frame" x="99" y="351" width="115" height="29"/>
-                                <segments>
-                                    <segment title="Default"/>
-                                    <segment title="Black"/>
-                                </segments>
-                                <connections>
-                                    <action selector="styleControlDidChange:" destination="vXZ-lx-hvc" eventType="valueChanged" id="VrE-Hr-Sqj"/>
-                                </connections>
-                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="a83-bF-y1j" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="GWx-6b-BGH"/>
                             <constraint firstAttribute="centerY" secondItem="7I7-bD-Sf9" secondAttribute="centerY" id="Q64-SJ-IYv"/>
                             <constraint firstAttribute="centerX" secondItem="7I7-bD-Sf9" secondAttribute="centerX" constant="-0.5" id="UPQ-fo-LuN"/>
+                            <constraint firstItem="vA3-a2-Nbc" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Xeh-Zq-Itt"/>
+                            <constraint firstItem="a83-bF-y1j" firstAttribute="top" secondItem="vA3-a2-Nbc" secondAttribute="bottom" constant="8" id="aT6-bM-gwt"/>
+                            <constraint firstItem="vA3-a2-Nbc" firstAttribute="top" secondItem="7I7-bD-Sf9" secondAttribute="bottom" constant="8" id="piB-mL-tMC"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="GWq-HT-TWG">
@@ -64,7 +68,7 @@
             </objects>
             <point key="canvasLocation" x="1195" y="138"/>
         </scene>
-        <!--Item-->
+        <!--Navigation Controller-->
         <scene sceneID="hJd-2k-VKa">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="qXO-Rf-EKs" sceneMemberID="viewController">
@@ -108,11 +112,6 @@
             <point key="canvasLocation" x="264" y="138"/>
         </scene>
     </scenes>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="JhI-rw-Zo6"/>
     </inferredMetricsTieBreakers>
