@@ -140,6 +140,13 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
     return NO;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isKindOfClass:[UISlider class]]) {
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - UINavigationControllerDelegate
 
 /**

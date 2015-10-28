@@ -183,6 +183,7 @@
 				A6C429491937ABD10095C38C /* Frameworks */,
 				A6C4294A1937ABD10095C38C /* Resources */,
 				5DA9FC7A72FED79D9BB7CE87 /* Copy Pods Resources */,
+				937392228A2E7EEDC8269DFE /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -280,6 +281,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SloppySwiperExample/Pods-SloppySwiperExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		937392228A2E7EEDC8269DFE /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SloppySwiperExample/Pods-SloppySwiperExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DA3F85876050AA63B1E35FD5 /* Check Pods Manifest.lock */ = {
