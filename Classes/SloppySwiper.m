@@ -314,7 +314,7 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
     if ([viewCotnroller respondsToSelector:@selector(ssw_navigationBarStyle)]) {
         return [(id<SloppySwiperViewControllerProtocol>)viewCotnroller ssw_navigationBarStyle];
     }
-    return UIBarStyleDefault;
+    return self.navigationController.navigationBar.barStyle;
 }
 
 - (UIColor *)navigationBarColorFromViewController:(UIViewController *)viewController
@@ -338,7 +338,7 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
     if ([viewController respondsToSelector:@selector(ssw_navigationBarShadowImage)]) {
         return [viewController performSelector:@selector(ssw_navigationBarShadowImage)];
     }
-    return nil;
+    return self.navigationController.navigationBar.shadowImage;
 }
 
 #pragma mark - Notification

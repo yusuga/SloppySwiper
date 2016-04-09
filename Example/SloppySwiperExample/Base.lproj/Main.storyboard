@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="bIS-C8-vjl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="bIS-C8-vjl">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -60,6 +60,11 @@
                             <constraint firstItem="vA3-a2-Nbc" firstAttribute="top" secondItem="7I7-bD-Sf9" secondAttribute="bottom" constant="8" id="piB-mL-tMC"/>
                         </constraints>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="goi-PV-cgb"/>
+                        <barButtonItem title="toolbar item" id="f1Z-fE-lxP"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="NJp-Ql-MHF"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" id="GWq-HT-TWG">
                         <nil key="title"/>
                     </navigationItem>
@@ -71,7 +76,7 @@
         <!--Navigation Controller-->
         <scene sceneID="hJd-2k-VKa">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="qXO-Rf-EKs" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="qXO-Rf-EKs" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="CeE-x5-T4o"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="7gB-7C-wDb">
@@ -79,6 +84,10 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Ryx-nI-awQ">
+                        <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <outlet property="delegate" destination="LZ9-hm-DUE" id="6g0-L1-iS9"/>
                         <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="JhI-rw-Zo6"/>
