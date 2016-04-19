@@ -271,6 +271,7 @@ static NSString * const SloppySwiperUpdateNavigationBarAppearanceNotification = 
     [self setNavigationBarStyle:[self navigationBarStyleFromViewController:viewController]];
     [self setNavigationBarColor:[self navigationBarColorFromViewController:viewController]];
     [self setNavigationBarItemColor:[self navigationBarItemColorFromViewController:viewController]];
+    [self setNavigationBarShadowImage:[self navigationBarShadowImageFromViewController:viewController]];
 }
 
 - (void)setNavigationBarStyle:(UIBarStyle)barStyle
